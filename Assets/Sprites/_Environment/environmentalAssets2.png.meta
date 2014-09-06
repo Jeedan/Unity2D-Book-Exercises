@@ -1,0 +1,137 @@
+fileFormatVersion: 2
+guid: 1754465a17435d24eae6f6c75d02d463
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: environmentalAssets
+    21300002: environmentalAssets2
+    21300004: environmentalAssets2_0
+    21300006: environmentalAssets2_1
+    21300008: environmentalAssets2_2
+    21300010: environmentalAssets2_4
+    21300012: environmentalAssets2_5
+    21300014: environmentalAssets2_6
+    21300016: environmentalAssets2_7
+    21300018: environmentalAssets2_8
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: environmentalAssets2_0
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 483
+        width: 374
+        height: 533
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_1
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 787
+        width: 96
+        height: 229
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_2
+      rect:
+        serializedVersion: 2
+        x: 511
+        y: 875
+        width: 39
+        height: 141
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_4
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 611
+        width: 135
+        height: 157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_5
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 500
+        width: 160
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_6
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 51
+        width: 267
+        height: 413
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_7
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 238
+        width: 122
+        height: 226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: environmentalAssets2_8
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 34
+        width: 142
+        height: 190
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
