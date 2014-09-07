@@ -58,7 +58,6 @@ public class NavigationPrompt : MonoBehaviour
         // only allow the player to travel if allowed
         if (NavigationManager.CanNavigate(this.tag))
         {
-
             showDialog = true;
         }
     }

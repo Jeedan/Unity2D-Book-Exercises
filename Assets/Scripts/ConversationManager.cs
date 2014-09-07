@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ConversationManager : Singleton<ConversationManager>
 {
@@ -28,6 +29,13 @@ public class ConversationManager : Singleton<ConversationManager>
 
     public bool stopConvo = true;
 
+    // my GUI 4.6 implementation of this
+    public GameObject convoContainer;
+    public RectTransform panel;
+    public Text crntSpeakerText;
+    public Image crntSpeakerImage;
+    public Text crntText;
+
     public IEnumerator DisplayConversation(Conversation conversation)
     {
         talking = true;
@@ -49,30 +57,45 @@ public class ConversationManager : Singleton<ConversationManager>
         yield return null;
     }
 
-    // replace this with 4.6 stuff
-    void OnGUI()
+    void Update()
     {
         if (talking)
         {
-            // layout start
-            GUI.BeginGroup(new Rect(Screen.width / 2 - conversationTextWidth / 2, 50,
-                                    conversationTextWidth + displayTextureOffset + 10, dialogHeight));
-            // the background box
-            GUI.Box(new Rect(0, 0, conversationTextWidth + displayTextureOffset + 10, dialogHeight), "");
-
-            // the character name
-            GUI.Label(new Rect(displayTextureOffset, 10, conversationTextWidth + 30, 20), currentConversationLine.SpeakingCharacterName);
-
-            // the conversationText
-            GUI.Label(new Rect(displayTextureOffset, 30, conversationTextWidth + 30, 20), currentConversationLine.ConversationText);
-
-            // the character image
-            GUI.DrawTextureWithTexCoords(new Rect(10, 10, 50, 50), currentConversationLine.DisplayPic.texture, scaledTextureRect);
-
-            // layout end
-            GUI.EndGroup();
+            convoContainer.SetActive(true);
+            crntSpeakerText.text = currentConversationLine.SpeakingCharacterName;
+            crntText.text = currentConversationLine.ConversationText;
+            crntSpeakerImage.sprite = currentConversationLine.DisplayPic;
+        }
+        else
+        {
+            convoContainer.SetActive(false);
         }
     }
+
+    // replace this with 4.6 stuff
+    //void OnGUI()
+    //{
+    //    if (talking)
+    //    {
+    //        // layout start
+    //        GUI.BeginGroup(new Rect(Screen.width / 2 - conversationTextWidth / 2, 50,
+    //                                conversationTextWidth + displayTextureOffset + 10, dialogHeight));
+    //        // the background box
+    //        GUI.Box(new Rect(0, 0, conversationTextWidth + displayTextureOffset + 10, dialogHeight), "");
+
+    //        // the character name
+    //        GUI.Label(new Rect(displayTextureOffset, 10, conversationTextWidth + 30, 20), currentConversationLine.SpeakingCharacterName);
+
+    //        // the conversationText
+    //        GUI.Label(new Rect(displayTextureOffset, 30, conversationTextWidth + 30, 20), currentConversationLine.ConversationText);
+
+    //        // the character image
+    //        GUI.DrawTextureWithTexCoords(new Rect(10, 10, 50, 50), currentConversationLine.DisplayPic.texture, scaledTextureRect);
+
+    //        // layout end
+    //        GUI.EndGroup();
+    //    }
+    //}
 
     public void StartConversation(Conversation conversation)
     {
