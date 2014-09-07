@@ -19,4 +19,12 @@ public class PositionManager : MonoBehaviour
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = positionManager;
     }
+
+    public static PositionManager ReadPositionsFromAsset(string Name)
+    {
+        string path = "/";
+        object o = Resources.Load(path + Name);
+        PositionManager retrievedPositions = (PositionManager)o;
+        return retrievedPositions;
+    }
 }

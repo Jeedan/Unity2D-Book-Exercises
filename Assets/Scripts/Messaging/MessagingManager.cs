@@ -19,6 +19,7 @@ public class MessagingManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
     }
 
     // the subscribe method for manager
