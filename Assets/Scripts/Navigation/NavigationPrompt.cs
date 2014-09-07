@@ -10,7 +10,6 @@ public class NavigationPrompt : MonoBehaviour
     public Text travelText;
     public Button travelButton;
     public Button stayButton;
-
     public string travelString = "Do you want to travel to ";
 
     void Awake()

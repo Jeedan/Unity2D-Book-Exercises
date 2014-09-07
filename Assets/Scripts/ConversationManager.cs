@@ -7,7 +7,7 @@ public class ConversationManager : Singleton<ConversationManager>
 
     // is there a convo going on?
     bool talking = false;
-    
+
     // the current line of text being displayed
     ConversationEntry currentConversationLine;
 
@@ -26,14 +26,16 @@ public class ConversationManager : Singleton<ConversationManager>
     // scaled image for displaying character image
     Rect scaledTextureRect;
 
-    IEnumerator DisplayConversation(Conversation conversation)
+    public bool stopConvo = true;
+
+    public IEnumerator DisplayConversation(Conversation conversation)
     {
         talking = true;
         foreach (var conversationLine in conversation.ConversationLines)
         {
             currentConversationLine = conversationLine;
             conversationTextWidth = currentConversationLine.ConversationText.Length * fontSpacing;
-            
+
             // we might need to change this later too
             scaledTextureRect = new Rect(currentConversationLine.DisplayPic.textureRect.x / currentConversationLine.DisplayPic.texture.width,
                 currentConversationLine.DisplayPic.textureRect.y / currentConversationLine.DisplayPic.texture.height,
@@ -42,6 +44,7 @@ public class ConversationManager : Singleton<ConversationManager>
 
             yield return new WaitForSeconds(3);
         }
+
         talking = false;
         yield return null;
     }
@@ -53,15 +56,15 @@ public class ConversationManager : Singleton<ConversationManager>
         {
             // layout start
             GUI.BeginGroup(new Rect(Screen.width / 2 - conversationTextWidth / 2, 50,
-                                    conversationTextWidth + 10, dialogHeight));
+                                    conversationTextWidth + displayTextureOffset + 10, dialogHeight));
             // the background box
-            GUI.Box(new Rect(0, 0, conversationTextWidth + 10, dialogHeight), "");
+            GUI.Box(new Rect(0, 0, conversationTextWidth + displayTextureOffset + 10, dialogHeight), "");
 
             // the character name
-            GUI.Label(new Rect(10, 10, conversationTextWidth + 30, 20), currentConversationLine.SpeakingCharacterName);
+            GUI.Label(new Rect(displayTextureOffset, 10, conversationTextWidth + 30, 20), currentConversationLine.SpeakingCharacterName);
 
             // the conversationText
-            GUI.Label(new Rect(10, 30, conversationTextWidth + 30, 20), currentConversationLine.ConversationText);
+            GUI.Label(new Rect(displayTextureOffset, 30, conversationTextWidth + 30, 20), currentConversationLine.ConversationText);
 
             // the character image
             GUI.DrawTextureWithTexCoords(new Rect(10, 10, 50, 50), currentConversationLine.DisplayPic.texture, scaledTextureRect);
@@ -79,4 +82,9 @@ public class ConversationManager : Singleton<ConversationManager>
         }
     }
 
+    public void StopConversation(Conversation conversation)
+    {
+        StopCoroutine(DisplayConversation(conversation));
+        talking = false;
+    }
 }
