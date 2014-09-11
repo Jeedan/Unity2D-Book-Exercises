@@ -56,7 +56,7 @@ public class ConversationManager : Singleton<ConversationManager>
         talking = false;
         yield return null;
     }
-
+    
     void Update()
     {
         if (talking)

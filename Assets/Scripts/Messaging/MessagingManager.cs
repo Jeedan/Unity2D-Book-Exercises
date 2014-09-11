@@ -8,6 +8,7 @@ public class MessagingManager : MonoBehaviour
     public static MessagingManager Instance { get; private set; }
 
     private List<Action> subscribers = new List<Action>();
+    private List<Action<bool>> uiEventSubscribers = new List<Action<bool>>(); 
 
     void Awake()
     {
@@ -49,5 +50,28 @@ public class MessagingManager : MonoBehaviour
         {
             subscriber();
         }
+    }
+
+    public void UISubscribeEvent(Action<bool> subscriber)
+    {
+        uiEventSubscribers.Add(subscriber);
+    }
+
+    public void BroadcastUIEvent(bool uIVisible)
+    {
+        foreach (var subscriber in uiEventSubscribers.ToArray())
+        {
+            subscriber(uIVisible);
+        }
+    }
+
+    public void UnSubscribeUIEvent(Action<bool> subscriber)
+    {
+        uiEventSubscribers.Remove(subscriber);
+    }
+
+    public void ClearAllUIEventSubscribers()
+    {
+        uiEventSubscribers.Clear();
     }
 }

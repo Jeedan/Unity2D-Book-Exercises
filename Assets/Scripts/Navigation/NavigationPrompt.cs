@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 public class NavigationPrompt : MonoBehaviour
 {
-    public GameObject navigationContainer; // container which has the GUI elements
     public bool showDialog = false;
-
+    public GameObject navigationContainer; // container which has the GUI elements
     public Text travelText;
     public Button travelButton;
     public Button stayButton;
@@ -42,15 +41,21 @@ public class NavigationPrompt : MonoBehaviour
     public void OnTravelClicked()
     {
         NavigationManager.NavigateTo(this.tag);
-        showDialog = false;
+        DialogVisible(false);
         // Application.LoadLevel(1);
     }
 
     public void OnStayClicked()
     {
         Debug.Log("Stay in " + this.tag);
-        showDialog = false;
+        DialogVisible(false);
         // navigationContainer.SetActive(false);
+    }
+
+    void DialogVisible(bool visibility)
+    {
+        showDialog = visibility;
+        MessagingManager.Instance.BroadcastUIEvent(visibility);
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -58,13 +63,22 @@ public class NavigationPrompt : MonoBehaviour
         // only allow the player to travel if allowed
         if (NavigationManager.CanNavigate(this.tag))
         {
-            showDialog = true;
+            DialogVisible(true);
         }
     }
 
     void OnCollisionExit2D(Collision2D col)
     {
         Debug.Log("exit");
-        showDialog = false;
+        DialogVisible(false);
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        // only allow player to travel if allowed
+        if (NavigationManager.CanNavigate(this.tag))
+        {
+            DialogVisible(true);
+        }
     }
 }
