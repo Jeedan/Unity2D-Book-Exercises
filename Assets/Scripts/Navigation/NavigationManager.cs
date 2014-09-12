@@ -30,7 +30,8 @@ public static class NavigationManager
 
     public static void NavigateTo(string destination)
     {
+        if (destination == "Home")
+            GameState.PlayerReturningHome = false;
         FadeInOutManager.FadeToLevel(destination, 2f, 2f, Color.black);
-        Debug.Log("Navigate to " + destination);
     }
 }
