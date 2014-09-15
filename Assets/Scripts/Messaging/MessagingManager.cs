@@ -8,7 +8,9 @@ public class MessagingManager : MonoBehaviour
     public static MessagingManager Instance { get; private set; }
 
     private List<Action> subscribers = new List<Action>();
-    private List<Action<bool>> uiEventSubscribers = new List<Action<bool>>(); 
+    private List<Action<bool>> uiEventSubscribers = new List<Action<bool>>();
+
+    private List<Action<InventoryItem>> inventorySubscribers = new List<Action<InventoryItem>>();
 
     void Awake()
     {
@@ -52,7 +54,7 @@ public class MessagingManager : MonoBehaviour
         }
     }
 
-    public void UISubscribeEvent(Action<bool> subscriber)
+    public void SubscribeUIEvent(Action<bool> subscriber)
     {
         uiEventSubscribers.Add(subscriber);
     }
@@ -73,5 +75,39 @@ public class MessagingManager : MonoBehaviour
     public void ClearAllUIEventSubscribers()
     {
         uiEventSubscribers.Clear();
+    }
+
+    // sub for inventory manager
+    public void SubscribeInventoryEvent(Action<InventoryItem> subscriber)
+    {
+        if (inventorySubscribers != null)
+        {
+            inventorySubscribers.Add(subscriber);
+        }
+    }
+
+    public void BroadcastInventoryEvent(InventoryItem itemInUse)
+    {
+        foreach (var subscriber in inventorySubscribers)
+        {
+            subscriber(itemInUse);
+        }
+    }
+
+    // unsub
+    public void UnSubscribeInventoryEvent(Action<InventoryItem> subscriber)
+    {
+        if (inventorySubscribers != null)
+        {
+            inventorySubscribers.Remove(subscriber);
+        }
+    }
+
+    public void ClearAllInventoryEventSubscribers()
+    {
+        if (inventorySubscribers != null)
+        {
+            inventorySubscribers.Clear();
+        }
     }
 }

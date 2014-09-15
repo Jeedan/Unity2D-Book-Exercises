@@ -26,7 +26,7 @@ public class MapMovement : MonoBehaviour
 
     void Start()
     {
-        MessagingManager.Instance.UISubscribeEvent(UpdateInputAction);
+        MessagingManager.Instance.SubscribeUIEvent(UpdateInputAction);
     }
 
     private void UpdateInputAction(bool uiVisible)
