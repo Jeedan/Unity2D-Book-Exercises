@@ -11,6 +11,15 @@ public class BattleManager : MonoBehaviour
     private int enemyCount;
     private Animator battleStateManager;
 
+    private string selectedTargetName;
+    private EnemyController selectedTarget;
+    public GameObject selectionCircle;
+    private bool canSelectEnemy;
+    private bool attacking = false;
+
+    public bool CanSelectEnemy { get { return canSelectEnemy; } }
+    public int EnemyCount { get { return enemyCount; } }
+
     public enum BattleState
     {
         Begin_Battle,
@@ -70,15 +79,14 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleState.Player_Attack:
                 //battleStateManager.SetBool("PlayerReady", false);
+                if (!attacking)
+                {
+                    StartCoroutine(AttackTarget());
+                }
                 break;
             case BattleState.Change_Control:
                 break;
             case BattleState.Enemy_Attack:
-                for (int i = 0; i < enemyCount-1; i++)
-                {
-                    Debug.Log(EnemyPrefabs[i].name + " " + i + " attacks"); 
-                }
-
                 break;
             case BattleState.Battle_Result:
                 break;
@@ -97,9 +105,38 @@ public class BattleManager : MonoBehaviour
             yield return StartCoroutine(MoveCharacterToPoint(EnemySpawnPoints[i], newEnemy));
 
             newEnemy.transform.parent = EnemySpawnPoints[i].transform;
+
+            var controller = (EnemyController)newEnemy.GetComponent(typeof(EnemyController));
+            controller.BattleManager = this;
+
+            var EnemyProfile = ScriptableObject.CreateInstance<Enemy>();
+            EnemyProfile.Class = EnemyClass.Goblin;
+            EnemyProfile.Level = 1;
+            EnemyProfile.Damage = 1;
+            EnemyProfile.Health = 2;
+            EnemyProfile.name = EnemyProfile.Class + " " + i.ToString();
+
+            controller.EnemyProfie = EnemyProfile;
         }
 
         battleStateManager.SetBool("BattleReady", true);
+    }
+
+    public void SelectEnemy(EnemyController enemy, string name)
+    {
+        selectedTarget = enemy;
+        selectedTargetName = name;
+    }
+
+    public void ClearSelectedEnemy()
+    {
+        if (selectedTarget != null)
+        {
+            var enemyController = (EnemyController)selectedTarget.GetComponent(typeof(EnemyController));
+            enemyController.ClearSelection();
+            selectedTarget = null;
+            selectedTargetName = string.Empty;
+        }
     }
 
     IEnumerator MoveCharacterToPoint(GameObject destination, GameObject character)
@@ -121,6 +158,24 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    IEnumerator AttackTarget()
+    {
+        int Attacks = 0;
+        attacking = true;
+        bool attackComplete = false;
+        while (!attackComplete)
+        {
+            GameState.CurrentPlayer.Attack(selectedTarget.EnemyProfie);
+            selectedTarget.UpdateAI();
+            Attacks++;
+            if (selectedTarget.EnemyProfie.Health < 1 || Attacks > GameState.CurrentPlayer.NoOfAttacks)
+            {
+                attackComplete = true;
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     void OnGUI()
     {
         switch (currentBattleState)
@@ -136,13 +191,29 @@ public class BattleManager : MonoBehaviour
                     GameState.PlayerReturningHome = true;
                     NavigationManager.NavigateTo("World");
                 }
-                break;
-            case BattleState.Player_Attack:
+
                 if (selectedWeapon == null)
                 {
                     GUI.Box(new Rect((Screen.width * 0.5f) - 50, 10, 100, 50), "Select Weapon");
                 }
+                else if (selectedTarget == null)
+                {
 
+                    GUI.Box(new Rect((Screen.width * 0.5f) - 50, 10, 100, 50), "Select Target");
+                    canSelectEnemy = true;
+                }
+                else
+                {
+                    if (GUI.Button(new Rect((Screen.width / 2) - 50, 10, 100, 50), "Attack " + selectedTargetName))
+                    {
+                        canSelectEnemy = false;
+                        battleStateManager.SetBool("PlayerReady", true);
+                        MessagingManager.Instance.BroadcastUIEvent(true);
+                    }
+                }
+
+                break;
+            case BattleState.Player_Attack:
                 break;
             case BattleState.Change_Control:
                 break;
