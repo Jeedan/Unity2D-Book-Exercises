@@ -4,6 +4,7 @@ using System.Collections;
 public class CommandBar : MonoBehaviour
 {
     public InventoryItem debugItem; // debug purposes
+    public InventoryItem debugItem2;
 
     private CommandButton[] commandButtons;
     public float buttonSize = 0.5f;
@@ -49,6 +50,7 @@ public class CommandBar : MonoBehaviour
 //#if UNITY_EDITOR
 //#endif
         GameState.CurrentPlayer.AddinventoryItem(debugItem);
+        GameState.CurrentPlayer.AddinventoryItem(debugItem2);
         ScreenHeight = Camera.main.orthographicSize * 2;
         ScreenWidth = ScreenHeight * Screen.width / Screen.height;
     }
@@ -209,6 +211,13 @@ public class CommandBar : MonoBehaviour
     void SetCanSelectButton(bool state)
     {
         canSelectButton = !state;
+
+        // reset selection every time we freeze UIevents
+        if (!canSelectButton)
+        {
+            ResetSelection(selectedButton);
+            selectedButton = null;
+        }
     }
 
     void SetPosition(float x, float y)
