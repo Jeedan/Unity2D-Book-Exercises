@@ -9,4 +9,17 @@ public class InventoryItem : ScriptableObject
     public int Cost;
     public int Strength;
     public int Defense;
+
+
+    /////////////////////////////////////// new section end
+    public ItemType type;
+
+    public enum ItemType
+    {
+        SWORD,
+        AXE,
+        SPEAR,
+        BOW,
+        POTION
+    }
 }

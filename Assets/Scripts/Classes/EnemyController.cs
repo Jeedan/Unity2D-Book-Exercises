@@ -76,7 +76,7 @@ public class EnemyController : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (battleManager.CanSelectEnemy)
+        if (battleManager.CanSelectEnemy && this.EnemyProfie.Health >= 1)
         {
             var selection = !selected;
             battleManager.ClearSelectedEnemy();
@@ -107,4 +107,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    //public bool HitEnemyAnim { get { return enemyAI.GetBool("PlayerAttacking"); } set { enemyAI.SetBool("PlayerAttacking", value); } }
+    public void HitEnemyAnim()
+    {
+        enemyAI.SetTrigger("PlayerAttacking");
+    }
 }

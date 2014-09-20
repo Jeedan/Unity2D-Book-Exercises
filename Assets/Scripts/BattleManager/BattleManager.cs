@@ -124,17 +124,16 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case BattleState.Change_Control:
-                EndBattle();
                 attacking = false;
-                ClearSelectedEnemy();
-                selectedWeapon = null;
                 MessagingManager.Instance.BroadcastUIEvent(true);
                 battleStateManager.SetBool("EnemiesDone", false);
                 break;
             case BattleState.Enemy_Attack:
+                ClearSelectedEnemy();
+                selectedWeapon = null;
                 foreach (var gob in Enemies)
                 {
-                    if (gob.EnemyProfie.Health > 1 && !attacking)
+                    if (gob.EnemyProfie.Health >= 1 && !attacking)
                     {
                         StartCoroutine(EnemyAttack());
                     }
@@ -193,7 +192,7 @@ public class BattleManager : MonoBehaviour
                 var offSetX = 140;
                 for (int i = 0; i < Enemies.Count; i++)
                 {
-                    if (Enemies[i].EnemyProfie.Health > 1)
+                    if (Enemies[i].EnemyProfie.Health > 0)
                     {
                         GUI.Box(new Rect(posX, posY, 130, 20),
                                      Enemies[i].EnemyProfie.Name + " health: " + Enemies[i].EnemyProfie.Health);
@@ -281,9 +280,29 @@ public class BattleManager : MonoBehaviour
         bool attackComplete = false;
         while (!attackComplete)
         {
+            //////////////////////////////////////// new section for abilities work on this
+            var curStr = GameState.CurrentPlayer.Strength;
+            GameState.CurrentPlayer.Strength += selectedWeapon.Strength;
+            for (int i = 0; i < GameState.CurrentPlayer.Inventory.Count; i++)
+            {
+                if (selectedWeapon == GameState.CurrentPlayer.Inventory[i])
+                {
+                    if (GameState.CurrentPlayer.abilities[i] != null)
+                        GameState.CurrentPlayer.abilities[i].UseAbility();
+                    else
+                    {
+                        Debug.LogError("Ability not found");
+                    }
+                }
+            }
+            /////////////////////////////////////// new section end
+
             GameState.CurrentPlayer.Attack(selectedTarget.EnemyProfie);
             selectedTarget.UpdateAI();
+            selectedTarget.HitEnemyAnim();
             Attacks++;
+
+           // yield return new WaitForSeconds(0.2f);
             if (selectedTarget.EnemyProfie.Health < 1 || Attacks >= GameState.CurrentPlayer.NoOfAttacks)
             {
                 attackComplete = true;
@@ -292,10 +311,16 @@ public class BattleManager : MonoBehaviour
             if (selectedTarget.EnemyProfie.Health < 1)
             {
                 enemyKillCount++;
+                attackComplete = true;
                 Enemies.Remove(selectedTarget);
+                EndBattle();
             }
+
             yield return new WaitForSeconds(1);
-            Debug.Log("player attack");
+            //////////////////////////////////////// new section for abilities work on this
+            Debug.Log("player attack dealt " + GameState.CurrentPlayer.Strength + " damage!");
+            GameState.CurrentPlayer.Strength = curStr;
+            /////////////////////////////////////// new section end
             battleStateManager.SetBool("PlayerReady", false);
         }
     }
@@ -307,22 +332,49 @@ public class BattleManager : MonoBehaviour
         bool attackComplete = false;
         while (!attackComplete)
         {
-            for (int i = 0; i < Enemies.Count; i++)
+            foreach (var gob in Enemies)
             {
-                if (Enemies[i].EnemyProfie.Health > 1)
+                if (GameState.CurrentPlayer.Health > 0)
                 {
-                    Enemies[i].EnemyProfie.Attack(GameState.CurrentPlayer);
-                    Debug.Log(Enemies[i].EnemyProfie.Name + " attack");
+                    gob.EnemyProfie.Attack(GameState.CurrentPlayer);
                     Attacks++;
-                    yield return new WaitForSeconds(0.5f);
-                    if (GameState.CurrentPlayer.Health < 1 || Attacks >= Enemies[i].EnemyProfie.NoOfAttacks)
+                    Debug.Log(gob.EnemyProfie.Name + " attack!!");
+                    yield return new WaitForSeconds(0.3f);
+                    if (GameState.CurrentPlayer.Health < 1 || Attacks >= gob.EnemyProfie.NoOfAttacks)
                     {
                         attackComplete = true;
                     }
+                    yield return new WaitForSeconds(0.5f);
                 }
-                yield return new WaitForSeconds(1);
+                else
+                {
+                    attackComplete = true;
+                    EndBattle();
+                    yield return new WaitForSeconds(0.5f);
+                }
             }
             battleStateManager.SetBool("EnemiesDone", true);
+            //for (int i = 0; i < Enemies.Count; i++)
+            //{
+            //    if (Enemies[i].EnemyProfie.Health >= 1)
+            //    {
+            //        Enemies[i].EnemyProfie.Attack(GameState.CurrentPlayer);
+            //        Attacks++;
+            //        Debug.Log(Enemies[i].EnemyProfie.Name + " attack");
+            //        yield return new WaitForSeconds(0.5f);
+            //        if (GameState.CurrentPlayer.Health <1 || Attacks >= Enemies[i].EnemyProfie.NoOfAttacks)
+            //        {
+            //            attackComplete = true;
+            //        }
+            //    }
+               
+            //    if (Enemies[i].EnemyProfie.Health < 1)
+            //    {
+            //        attackComplete = true;
+            //    }
+            //    yield return new WaitForSeconds(1);
+            //}
+            //battleStateManager.SetBool("EnemiesDone", true);
         }
     }
 
